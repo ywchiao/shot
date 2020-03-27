@@ -40,6 +40,11 @@ def main():
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
                 game_over = True
+            elif (
+                (event.type == pygame.KEYDOWN) and
+                (event.key == pygame.K_ESCAPE)
+            ):
+                game_over = True
 
         # 清除畫面，只剩下背景
         win.blit(background, (0, 0))
