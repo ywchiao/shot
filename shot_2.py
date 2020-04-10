@@ -159,6 +159,17 @@ def main():
     # 初始化 Player 物件，並置於螢幕中央
     player = Player(sprite_sheet, (x, y))
 
+    key_handler = {
+        pygame.K_a: player.leftward,
+        pygame.K_d: player.rightward,
+        pygame.K_e: player.clockwise,
+        pygame.K_f: player.backward,
+        pygame.K_p: player.pause,
+        pygame.K_q: player.counter_clockwise,
+        pygame.K_s: player.backward,
+        pygame.K_w: player.forward,
+    }
+
     game_over = False
 
     # 遊戲主迴圈
@@ -173,39 +184,9 @@ def main():
                 game_over = True
             elif (
                 (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_q)
+                (event.key in key_handler)
             ):
-                player.counter_clockwise()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_e)
-            ):
-                player.clockwise()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_w)
-            ):
-                player.forward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_a)
-            ):
-                player.leftward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_s)
-            ):
-                player.backward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_d)
-            ):
-                player.rightward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_p)
-            ):
-                player.pause()
+                key_handler[event.key]()
 
         # 清除畫面，只剩下背景
         win.blit(background, (0, 0))
