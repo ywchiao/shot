@@ -4,131 +4,11 @@ import math
 import pygame
 import pygame.freetype
 
-class RotateSystem:
-    def __init__(self):
-        pass
+from component.sprite_sheet import SpriteSheet
 
-    def update(self, surface, degree=0):
-        return pygame.transform.rotate(surface, degree)
+from system.event import event_dispatcher
 
-class MoveSystem:
-    def __init__(self):
-        pass
-
-    def update(self, degree, drift, offset=(0, 0)):
-        theta = (degree / 180) * math.pi
-
-        drift[0] += (
-            offset[0] * math.cos(theta) +
-            offset[1] * math.sin(theta)
-        )
-
-        drift[1] += (
-            - offset[0] * math.sin(theta) +
-            offset[1] * math.cos(theta)
-        )
-
-        drift[0], x_offset = math.modf(drift[0])
-        drift[1], y_offset = math.modf(drift[1])
-
-        return (int(x_offset), int(y_offset))
-
-class SpriteSheetComponent:
-    def __init__(self):
-        # 取得 sprite sheet
-        sprites = pygame.image.load('./sprites.png')
-
-        self._sprites = []
-
-        for i in range(3):
-            self._sprites.append(
-                sprites.subsurface(pygame.Rect(0, i * 32, 32, 32))
-            )
-
-            self._sprites.append(
-                sprites.subsurface(pygame.Rect(32, i * 32, 32, 32))
-            )
-
-    def get_sprite(self, i):
-        return self._sprites[i]
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self, sprite_sheet, pos=(0, 0), size=(32, 32)):
-        pygame.sprite.Sprite.__init__(self)
-
-        self._images = (
-          sprite_sheet.get_sprite(2),
-          sprite_sheet.get_sprite(3)
-        )
-
-        self._sprite_idx = 0
-        self._sprites = list(self._images)
-
-        self.sprite = self._sprites[self._sprite_idx]
-        self.rect = self.sprite.get_rect();
-
-        self._x, self._y = pos
-
-        self._rotate_system = RotateSystem()
-        self._move_system = MoveSystem()
-
-        self._move_step = (0, 0)
-        self._move_drift = [0, 0]
-
-        self._rotate_degree = 0
-        self._direction = 0
-
-    def _move(self):
-        offset = self._move_system.update(
-            self._direction, self._move_drift, self._move_step
-        )
-
-        self._x += offset[0]
-        self._y += offset[1]
-
-    def _rotate(self):
-        if self._rotate_degree:
-            self._direction += self._rotate_degree
-            self._rotate_degree = 0
-
-            for i in range(len(self._sprites)):
-                self._sprites[i] = self._rotate_system.update(
-                    self._images[i], self._direction
-                )
-
-    def clockwise(self):
-        self._rotate_degree = -15
-
-    def counter_clockwise(self):
-        self._rotate_degree = 15
-
-    def backward(self):
-        self._move_step = (0, 2)
-
-    def forward(self):
-        self._move_step = (0, -2)
-
-    def leftward(self):
-        self._move_step = (-2, 0)
-
-    def rightward(self):
-        self._move_step = (2, 0)
-
-    def stop(self):
-        pass
-
-    def pause(self):
-        self._move_step = (0, 0)
-
-    def update(self):
-        self._rotate()
-        self._move()
-
-        self._sprite_idx = (self._sprite_idx + 1) % 2
-        self.sprite = self._sprites[self._sprite_idx]
-
-        self.rect = self.sprite.get_rect()
-        self.rect.center = (self._x, self._y)
+from player.player import Player
 
 def main():
     # 初始化 pyGame 引擎
@@ -150,7 +30,7 @@ def main():
     # 設定 pyGame 使用的系統字型
     font = pygame.freetype.SysFont("bradleyhanditc", 36)
 
-    sprite_sheet = SpriteSheetComponent()
+    sprite_sheet = SpriteSheet()
 
     # 計算 Sprite 置於螢幕中央時的左上角座標
     x = int((640 - 32) / 2)
@@ -163,49 +43,18 @@ def main():
 
     # 遊戲主迴圈
     while not game_over:
-        for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
+        for e in pygame.event.get():
+            if (e.type == pygame.QUIT):
                 game_over = True
             elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_ESCAPE)
+                (e.type == pygame.KEYDOWN) and
+                (e.key == pygame.K_ESCAPE)
             ):
                 game_over = True
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_q)
-            ):
-                player.counter_clockwise()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_e)
-            ):
-                player.clockwise()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_w)
-            ):
-                player.forward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_a)
-            ):
-                player.leftward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_s)
-            ):
-                player.backward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_d)
-            ):
-                player.rightward()
-            elif (
-                (event.type == pygame.KEYDOWN) and
-                (event.key == pygame.K_p)
-            ):
-                player.pause()
+            elif (e.type == pygame.KEYDOWN):
+                event_dispatcher.fire_event(None, 'cmd_keyboard', key=e.key);
+
+        event_dispatcher.dispatch_event()
 
         # 清除畫面，只剩下背景
         win.blit(background, (0, 0))
