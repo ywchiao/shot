@@ -1,0 +1,11 @@
+{
+  "vehicle": {
+    "name":"sprites",
+    "format": "png",
+    "row": 3,
+    "column": 2,
+    "width": 32,
+    "height": 32
+  }
+}
+

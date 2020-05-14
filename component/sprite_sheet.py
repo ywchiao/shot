@@ -2,9 +2,9 @@
 import pygame
 
 class SpriteSheet:
-    def __init__(self):
+    def __init__(self, fname):
         # 取得 sprite sheet
-        sprites = pygame.image.load('./resources/png/sprites.png')
+        sprites = pygame.image.load(f"./resources/png/{fname}")
 
         self._sprites = []
 

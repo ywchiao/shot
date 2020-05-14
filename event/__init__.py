@@ -1,6 +1,7 @@
 
+from .event import Event
 from .event_dispatcher import EventDispatcher
 
-event_dispatcher = EventDispatcher()
+dispatcher = EventDispatcher()
 
 # __init__.py
