@@ -10,7 +10,7 @@ from event import dispatcher
 class Rotating:
     def __init__(self):
         dispatcher.on("cmd_rotate", self._rotate)
-        dispatcher.on("cmd_turn_to", self._turn_to)
+        dispatcher.on("cmd_facing", self._turn_to)
 
     def _rotate(self, entity, degree=0):
         self._turn_to(entity, facing.get_value(entity).degree + degree)

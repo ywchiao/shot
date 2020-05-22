@@ -1,10 +1,11 @@
 
+from collections import deque
+
 from component import position
+from component import scene_manager
 from component import sprite_origin
 from component import sprite_drawing
 from component import sprite_sheet
-
-from component import viewable_objects
 
 from event import dispatcher
 
@@ -26,19 +27,36 @@ class Painting:
         sprite_drawing.update(entity, anime_frames)
 
     @LogCat.log_func
+    def _render_sprite(self, window, entity):
+        sprite = sprite_drawing.get_value(entity).next
+
+        if sprite:
+            rect = sprite.get_rect()
+            rect.center = position.get_value(entity).value
+
+            window.blit(sprite, rect)
+
+    @LogCat.log_func
+    def _render(self, window, scene):
+        queue = deque([scene.root])
+
+        while queue:
+            node = queue.popleft()
+
+            if node:
+                queue.extend(node.children)
+
+                if node.value and node.visible:
+                    self._render_sprite(window, node.entity)
+
+
+    @LogCat.log_func
     def _repaint(self, entity, window, background):
+        scene = scene_manager.get_scene("sample")
+
         # 清除畫面，只剩下背景
         window.blit(background, (0, 0))
 
-        for entity in viewable_objects.entities:
-            frame = sprite_drawing.get_value(entity).next
-
-            if frame:
-                rect = frame.get_rect()
-                rect.center = position.get_value(entity).value
-
-                window.blit(frame, rect)
-            else:
-                print(f"Frame can't be None. Something must be wrong.")
+        self._render(window, scene)
 
 # painting.py
