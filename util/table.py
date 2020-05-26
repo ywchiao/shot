@@ -20,7 +20,7 @@ class Table:
         return obj;
 
     @LogCat.log_func
-    def update(self, entity, value):
+    def update(self, entity, value=None):
         self._cache[entity] = self._cls(value)
 
 # table.py

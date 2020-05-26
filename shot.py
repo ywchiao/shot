@@ -13,7 +13,8 @@ def main():
     game = Game()
 
     for system in (
-        Keyboard, Moving, Painting, Rotating, Respawn
+        Keyboard, Moving, Painting, Rotating, Respawn,
+        MobFactory, SceneFactory,
     ):
         system()
 

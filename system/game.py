@@ -1,4 +1,8 @@
 
+import json
+
+from pathlib import Path
+
 import pygame
 import pygame.freetype
 
@@ -6,17 +10,28 @@ from component import config
 
 from player import Player
 
-from event import dispatcher
+from .system import System
 
 from logcat import LogCat
 
-class Game:
+class Game(System):
     def __init__(self):
         self._pygame_setup()
+
+        self._configure()
 
         self._player = Player(
             int((config.width - 32) / 2), int((config.height - 32) / 2)
         )
+
+    def _configure(self):
+        path = Path(f"./data/scenes")
+
+        for f in list(path.glob("./*.json")):
+            with f.open as fin:
+                desc = json.load(fin)
+
+                self.emit("cmd_scene", None, desc)
 
     def _pygame_setup(self):
        # 初始化 pyGame 引擎
@@ -55,9 +70,10 @@ class Game:
                         "cmd_keyboard", self._player.entity, key=e.key
                     )
 
-            dispatcher.fire_event("cmd_update", None)
-            dispatcher.fire_event(
-                "cmd_repaint", None,
+            self.emit("cmd_update", None)
+            self.emit(
+                "cmd_repaint",
+                None,
                 window=self._win, background=self._background
             )
 

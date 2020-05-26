@@ -1,54 +1,15 @@
 
-import json
-
-from pathlib import Path
-from random import randint
-
-from mob import Mob
-
-from .scene import Scene
-
-from event import dispatcher
+from util import Node
+from util import Table
 
 from logcat import LogCat
 
-class SceneManager:
+class SceneManager(Table):
     @LogCat.log_func
     def __init__(self):
-        self._cache = {}
+        super().__init__(Node)
 
-        path = Path(f"./data/scenes")
-
-        for f in list(path.glob("./*.json")):
-            with f.open() as fin:
-                desc = json.load(fin)
-
-                self.add_scene(desc["title"], self.create_scene(desc))
-
-    @LogCat.log_func
-    def add_scene(self, title, scene):
-        self._cache[title] = scene
-
-    @LogCat.log_func
-    def create_scene(self, desc):
-        scene = Scene()
-
-        for i in range(desc["mob"]):
-            mob = Mob()
-
-            scene.add_object(mob)
-
-            dispatcher.fire_event("cmd_respawn", mob.entity)
-
-        return scene
-
-    @LogCat.log_func
-    def get_scene(self, title):
-        if title in self._cache:
-            scene = self._cache[title]
-        else:
-            scene = None
-
-        return scene
+    def get_scene(self, entity):
+        return self.get_value(entity)
 
 # scene_manager.py

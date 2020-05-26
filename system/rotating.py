@@ -5,12 +5,12 @@ from component import facing
 from component import sprite_origin
 from component import sprite_drawing
 
-from event import dispatcher
+from core import Element
 
-class Rotating:
+class Rotating(Element):
     def __init__(self):
-        dispatcher.on("cmd_rotate", self._rotate)
-        dispatcher.on("cmd_facing", self._turn_to)
+        self.on("cmd_rotate", self._rotate)
+        self.on("cmd_facing", self._turn_to)
 
     def _rotate(self, entity, degree=0):
         self._turn_to(entity, facing.get_value(entity).degree + degree)

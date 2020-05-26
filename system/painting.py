@@ -7,15 +7,17 @@ from component import sprite_origin
 from component import sprite_drawing
 from component import sprite_sheet
 
-from event import dispatcher
+from core import Element
 
 from logcat import LogCat
 
-class Painting:
+class Painting(Element):
     @LogCat.log_func
     def __init__(self):
-        dispatcher.on("cmd_load_sprite", self._load_sprite)
-        dispatcher.on("cmd_repaint", self._repaint)
+        super().__init__()
+
+        self.on("cmd_load_sprite", self._load_sprite)
+        self.on("cmd_repaint", self._repaint)
 
     @LogCat.log_func
     def _load_sprite(self, entity, frames=(0, 0)):

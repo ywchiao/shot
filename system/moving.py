@@ -8,17 +8,21 @@ from component import moving_vector
 from component import position
 from component import scene_manager
 
+from core import Element
+
 from event import dispatcher
 
 from logcat import LogCat
 
-class Moving:
+class Moving(Element):
     @LogCat.log_func
     def __init__(self):
-        dispatcher.on("cmd_relocate", self._relocate)
-        dispatcher.on("cmd_update", self._update)
-        dispatcher.on("cmd_forward", self._forward)
-        dispatcher.on("cmd_backward", self._backward)
+        super().__init__()
+
+        self.on("cmd_relocate", self._relocate)
+        self.on("cmd_update", self._update)
+        self.on("cmd_forward", self._forward)
+        self.on("cmd_backward", self._backward)
 
     @LogCat.log_func
     def _forward(self, entity):

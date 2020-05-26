@@ -3,23 +3,24 @@ from random import randint
 
 from component import config
 
-from event import dispatcher
+from core import Element
 
 from logcat import LogCat
 
-class Respawn:
+class Respawn(Element):
     @LogCat.log_func
     def __init__(self):
-        dispatcher.on("cmd_respawn", self._respawn)
-#        dispatcher.on("cmd_update", self._update)
+        super().__init__()
+
+        self.on("cmd_respawn", self._respawn)
 
     @LogCat.log_func
     def _respawn(self, entity):
         x, y = randint(0, config.width), randint(0, config.height)
 
-        dispatcher.fire_event("cmd_relocate", entity, point=(x, y))
+        self.emit("cmd_relocate", entity, point=(x, y))
 
-        dispatcher.fire_event(
+        self.emit(
             "cmd_facing", entity, degree=randint(0, 360)
         )
 

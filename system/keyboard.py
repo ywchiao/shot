@@ -1,12 +1,14 @@
 
 import pygame
 
+from core import Element
+
 from component import moving_vector
 
-from event import dispatcher
-
-class Keyboard:
+class Keyboard(Element):
     def __init__(self):
+        super().__init__()
+
         self._handler = {
             pygame.K_a: self._leftward,
             pygame.K_d: self._rightward,
@@ -18,13 +20,13 @@ class Keyboard:
             pygame.K_w: self._forward,
         }
 
-        dispatcher.on("cmd_keyboard", self._key_handler)
+        self.on("cmd_keyboard", self._key_handler)
 
     def _clockwise(self, entity):
-        dispatcher.fire_event("cmd_rotate", entity, degree=-15)
+        self.emit("cmd_rotate", entity, degree=-15)
 
     def _counter_clockwise(self, entity):
-        dispatcher.fire_event("cmd_rotate", entity, degree=15)
+        self.emit("cmd_rotate", entity, degree=15)
 
     def _backward(self, entity):
         moving_vector.update(entity, (0, 2))
