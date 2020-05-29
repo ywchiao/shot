@@ -6,6 +6,7 @@ from .frame_table import FrameTable
 from .vector_table import VectorTable
 
 from .scene_manager import SceneManager
+from .window_manager import WindowManager
 
 from .speed import Speed
 from .sprite_sheet import SpriteSheet
@@ -23,5 +24,6 @@ position = VectorTable()
 moving_vector = VectorTable()
 
 scene_manager = SceneManager()
+window_manager = WindowManager()
 
 # __init__.py

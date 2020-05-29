@@ -3,11 +3,11 @@ from random import randint
 
 from component import config
 
-from core import Element
+from .system import System
 
 from logcat import LogCat
 
-class Respawn(Element):
+class Respawn(System):
     @LogCat.log_func
     def __init__(self):
         super().__init__()
@@ -24,8 +24,6 @@ class Respawn(Element):
             "cmd_facing", entity, degree=randint(0, 360)
         )
 
-    @LogCat.log_func
-    def _update(self, entity):
-        pass
+        self.emit("cmd_object_respawned", entity)
 
 # respawn.py

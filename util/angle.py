@@ -3,7 +3,7 @@ import math
 
 class Angle:
     def __init__(self, degree=0):
-        self._degree = degree
+        self._degree = degree % 360
 
     @property
     def degree(self):

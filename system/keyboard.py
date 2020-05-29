@@ -1,11 +1,11 @@
 
 import pygame
 
-from core import Element
+from .system import System
 
 from component import moving_vector
 
-class Keyboard(Element):
+class Keyboard(System):
     def __init__(self):
         super().__init__()
 

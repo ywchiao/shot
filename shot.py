@@ -7,6 +7,9 @@ from system import Painting
 from system import Rotating
 from system import Respawn
 
+from system import MobFactory
+from system import SceneFactory
+
 from logcat import LogCat
 
 def main():

@@ -22,28 +22,22 @@ class Config:
                     "height": 1024,
                 },
                 "path": {
-                    "data": "./data",
-                    "log": "./log"
+                    "mobs": "./data/mobs",
+                    "scenes": "./data/scenes",
                 },
                 "log": {
-                    "config": "config.json",
-                    "file": "shot.log"
+                    "config": "./log/config.json",
                 }
             }
 
             self._config_logger()
 
     def _config_logger(self):
-        path = Path(
-            f"{self._cache['path']['log']}/"
-            f"{self._cache['log']['config']}"
-        )
+        path = Path(f"{self._cache['log']['config']}")
 
         if path.is_file():
             with path.open() as fin:
-                config = json.load(fin)
-
-            logging.config.dictConfig(config)
+                logging.config.dictConfig(json.load(fin))
         else:
             logging.basicConfig(
                 filename=CONFIG.LOG_FILE,
@@ -66,5 +60,13 @@ class Config:
     @property
     def width(self):
         return self._cache["window"]["width"]
+
+    @property
+    def scenes(self):
+        return self._cache["path"]["scenes"]
+
+    @property
+    def mobs(self):
+        return self._cache["path"]["mobs"]
 
 # config.py

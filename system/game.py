@@ -1,14 +1,10 @@
 
-import json
-
-from pathlib import Path
-
 import pygame
 import pygame.freetype
 
 from component import config
 
-from player import Player
+from .game_window import GameWindow
 
 from .system import System
 
@@ -20,18 +16,12 @@ class Game(System):
 
         self._configure()
 
-        self._player = Player(
-            int((config.width - 32) / 2), int((config.height - 32) / 2)
-        )
+#        self._player = Player(
+#            int((config.width - 32) / 2), int((config.height - 32) / 2)
+        #)
 
     def _configure(self):
-        path = Path(f"./data/scenes")
-
-        for f in list(path.glob("./*.json")):
-            with f.open as fin:
-                desc = json.load(fin)
-
-                self.emit("cmd_scene", None, desc)
+         self.emit("cmd_scene_load", "sample")
 
     def _pygame_setup(self):
        # 初始化 pyGame 引擎
@@ -43,11 +33,14 @@ class Game(System):
         pygame.display.set_caption(config.name)
 
         # 設定 pyGame 遊戲視窗 *大小*
-        self._win = pygame.display.set_mode((config.width, config.height))
+        win = pygame.display.set_mode((config.width, config.height))
 
         # 準備遊戲視窗的 (黑色) 背景
-        self._background = self._win.copy()
-        self._background.fill((0, 0, 0))
+        background = win.copy()
+        background.fill((0, 0, 0))
+
+        # 建立一個新的 GameWindow 物件
+        self._window = GameWindow(win, background).entity
 
         # 設定 pyGame 使用的系統字型
         self._font = pygame.freetype.SysFont("bradleyhanditc", 36)
@@ -66,18 +59,14 @@ class Game(System):
                 ):
                     game_over = True
                 elif (e.type == pygame.KEYDOWN):
-                    dispatcher.fire_event(
+                    self.emit(
                         "cmd_keyboard", self._player.entity, key=e.key
                     )
 
             self.emit("cmd_update", None)
-            self.emit(
-                "cmd_repaint",
-                None,
-                window=self._win, background=self._background
-            )
+            self.emit("cmd_repaint", self._window)
 
-            dispatcher.dispatch_event()
+            self._dispatcher.dispatch()
 
             # 將遊戲視窗繪製 (貼) 到螢幕上
             pygame.display.flip()

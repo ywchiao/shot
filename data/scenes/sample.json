@@ -1,5 +1,6 @@
 {
   "title": "sample",
-  "mob": 10
+  "mobs": {
+    "wave": 3
+  }
 }
-

@@ -5,9 +5,9 @@ from component import facing
 from component import sprite_origin
 from component import sprite_drawing
 
-from core import Element
+from .system import System
 
-class Rotating(Element):
+class Rotating(System):
     def __init__(self):
         self.on("cmd_rotate", self._rotate)
         self.on("cmd_facing", self._turn_to)

@@ -1,17 +1,16 @@
 
 from collections import deque
 
-from component import position
 from component import scene_manager
 from component import sprite_origin
 from component import sprite_drawing
 from component import sprite_sheet
 
-from core import Element
+from .system import System
 
 from logcat import LogCat
 
-class Painting(Element):
+class Painting(System):
     @LogCat.log_func
     def __init__(self):
         super().__init__()
@@ -29,18 +28,11 @@ class Painting(Element):
         sprite_drawing.update(entity, anime_frames)
 
     @LogCat.log_func
-    def _render_sprite(self, window, entity):
-        sprite = sprite_drawing.get_value(entity).next
+    def _repaint(self, entity):
+        # 清除畫面，只剩下背景
+        self.emit("cmd_clear", entity)
 
-        if sprite:
-            rect = sprite.get_rect()
-            rect.center = position.get_value(entity).value
-
-            window.blit(sprite, rect)
-
-    @LogCat.log_func
-    def _render(self, window, scene):
-        queue = deque([scene.root])
+        queue = deque([scene_manager.current_scene])
 
         while queue:
             node = queue.popleft()
@@ -48,17 +40,7 @@ class Painting(Element):
             if node:
                 queue.extend(node.children)
 
-                if node.value and node.visible:
-                    self._render_sprite(window, node.entity)
-
-
-    @LogCat.log_func
-    def _repaint(self, entity, window, background):
-        scene = scene_manager.get_scene("sample")
-
-        # 清除畫面，只剩下背景
-        window.blit(background, (0, 0))
-
-        self._render(window, scene)
+                # 通知 *node* 在 window 上將自己畫 (render) 出來
+                self.emit("cmd_render", node.value, window=entity)
 
 # painting.py

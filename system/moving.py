@@ -1,36 +1,32 @@
 
 import math
 
-from collections import deque
-
 from component import facing
 from component import moving_vector
 from component import position
-from component import scene_manager
 
-from core import Element
-
-from event import dispatcher
+from .system import System
 
 from logcat import LogCat
 
-class Moving(Element):
+class Moving(System):
     @LogCat.log_func
     def __init__(self):
         super().__init__()
 
         self.on("cmd_relocate", self._relocate)
-        self.on("cmd_update", self._update)
         self.on("cmd_forward", self._forward)
         self.on("cmd_backward", self._backward)
 
     @LogCat.log_func
     def _forward(self, entity):
         moving_vector.update(entity, (0, -2))
+        self._move(entity)
 
     @LogCat.log_func
     def _backward(self, entity):
         moving_vector.update(entity, (0, 2))
+        self._move(entity)
 
     @LogCat.log_func
     def _move(self, entity):
@@ -56,20 +52,5 @@ class Moving(Element):
     @LogCat.log_func
     def _relocate(self, entity, point):
         position.update(entity, point)
-
-    @LogCat.log_func
-    def _update(self, entity):
-        scene = scene_manager.get_scene("sample")
-
-        queue = deque([scene.root])
-
-        while queue:
-            node = queue.popleft()
-
-            if node:
-                queue.extend(node.children)
-
-                if node.value and node.movable:
-                    self._move(node.entity)
 
 # moving.py
