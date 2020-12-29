@@ -1,0 +1,27 @@
+{
+  "name": "Shot!",
+  "font": {
+    "family": "bradleyhanditc",
+    "size": 36
+  },
+  "window": {
+    "width": 1280,
+    "height": 1024
+  },
+  "mobs": {
+    "path": "./data/mobs"
+  },
+  "scenes": {
+    "path": "./data/scenes",
+    "open": "sample"
+  },
+  "sprites": {
+    "path": "./resources/png",
+    "sheet": [
+      "sprites"
+    ]
+  },
+  "log": {
+    "config": "./log/config.json"
+  }
+}

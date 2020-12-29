@@ -9,13 +9,17 @@ from .system import System
 
 class Rotating(System):
     def __init__(self):
+        super().__init__()
+
         self.on("cmd_rotate", self._rotate)
         self.on("cmd_facing", self._turn_to)
 
-    def _rotate(self, entity, degree=0):
-        self._turn_to(entity, facing.get_value(entity).degree + degree)
+    def _rotate(self, e, degree=0):
+        self._turn_to(e, facing.get_value(e.target).degree + degree)
 
-    def _turn_to(self, entity, degree=0):
+    def _turn_to(self, e, degree=0):
+        entity = e.target
+
         sprite_drawing.update(
             entity, [
                 pygame.transform.rotate(frame, degree)

@@ -19,12 +19,15 @@ class Moving(System):
         self.on("cmd_backward", self._backward)
 
     @LogCat.log_func
-    def _forward(self, entity):
+    def _forward(self, e):
+        entity = e.target
         moving_vector.update(entity, (0, -2))
         self._move(entity)
 
     @LogCat.log_func
-    def _backward(self, entity):
+    def _backward(self, e):
+        entity = e.target
+
         moving_vector.update(entity, (0, 2))
         self._move(entity)
 
@@ -35,7 +38,7 @@ class Moving(System):
         face_to = facing.get_value(entity)
         vector = moving_vector.get_value(entity)
 
-        self._relocate(entity, (
+        self._update_position(entity, (
             (
                 pos.x +
                 vector.x * math.cos(face_to.radian) +
@@ -50,7 +53,11 @@ class Moving(System):
         ))
 
     @LogCat.log_func
-    def _relocate(self, entity, point):
+    def _relocate(self, e, point):
+        self._update_position(e.target, point)
+
+    @LogCat.log_func
+    def _update_position(self, entity, point):
         position.update(entity, point)
 
 # moving.py

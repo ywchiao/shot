@@ -22,32 +22,32 @@ class Keyboard(System):
 
         self.on("cmd_keyboard", self._key_handler)
 
-    def _clockwise(self, entity):
-        self.emit("cmd_rotate", entity, degree=-15)
+    def _clockwise(self, e):
+        self.emit("cmd_rotate", e.target, degree=-15)
 
-    def _counter_clockwise(self, entity):
-        self.emit("cmd_rotate", entity, degree=15)
+    def _counter_clockwise(self, e):
+        self.emit("cmd_rotate", e.target, degree=15)
 
-    def _backward(self, entity):
-        moving_vector.update(entity, (0, 2))
+    def _backward(self, e):
+        moving_vector.update(e.target, (0, 2))
 
-    def _forward(self, entity):
-        moving_vector.update(entity, (0, -2))
+    def _forward(self, e):
+        moving_vector.update(e.target, (0, -2))
 
-    def _leftward(self, entity):
-        moving_vector.update(entity, (-2, 0))
+    def _leftward(self, e):
+        moving_vector.update(e.target, (-2, 0))
 
-    def _rightward(self, entity):
-        moving_vector.update(entity, (2, 0))
+    def _rightward(self, e):
+        moving_vector.update(e.target, (2, 0))
 
-    def _stop(self, entity):
-        moving_vector.update(entity, (0, 0))
+    def _stop(self, e):
+        moving_vector.update(e.target, (0, 0))
 
-    def _pause(self, entity):
-        moving_vector.update(entity, (0, 0))
+    def _pause(self, e):
+        moving_vector.update(e.target, (0, 0))
 
-    def _key_handler(self, entity, key):
+    def _key_handler(self, e, key):
         if key in self._handler:
-            self._handler[key](entity)
+            self._handler[key](e.target)
 
 # keyboard.py

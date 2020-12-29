@@ -10,10 +10,10 @@ class System:
         self._entity = Entity.next()
 
     def on(self, event, handler):
-        self._dispatcher.on(event, handler)
+        self._dispatcher.on(event, self.entity, handler)
 
     def emit(self, event_type, target, **kwargs):
-        self._dispatcher.emit(event_type, target, **kwargs)
+        self._dispatcher.emit(event_type, target, self.entity, **kwargs)
 
     @property
     def entity(self):

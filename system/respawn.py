@@ -15,7 +15,9 @@ class Respawn(System):
         self.on("cmd_respawn", self._respawn)
 
     @LogCat.log_func
-    def _respawn(self, entity):
+    def _respawn(self, e):
+        entity = e.target
+
         x, y = randint(0, config.width), randint(0, config.height)
 
         self.emit("cmd_relocate", entity, point=(x, y))

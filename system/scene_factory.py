@@ -1,9 +1,6 @@
 
-import json
-
-from pathlib import Path
-
 from component import config
+from component import layout_manager
 from component import scene_manager
 
 from util import Node
@@ -17,29 +14,22 @@ class SceneFactory(System):
     def __init__(self):
         super().__init__()
 
-        self.on("cmd_scene_load", self._scene_load)
         self.on("cmd_scene_change", self._scene_change)
-        self.on("cmd_object_respawned", self._add_object)
+        self.on("cmd_obj_inited", self._add_object)
 
-    def _scene_change(self, entity, title):
-        scene_manager.change_scene(title)
+    def _scene_change(self, e, scene):
+        if not scene_manager.change_scene(scene):
+            layout = layout_manager.get_layout(scene, config.scenes)
 
-    def _scene_load(self, entity):
-        path = Path(f"{config.scenes}/{entity}.json")
+            for key, value in layout["mobs"].items():
+                for i in range(value):
+                    self.emit("cmd_mob_new", None, mob_class=key)
 
-        with path.open() as fin:
-            self._scene_build(json.load(fin))
+            scene_manager.new_scene(scene, layout["name"])
 
-    def _scene_build(self, desc):
-        scene_manager.add_scene(desc["title"])
+    def _add_object(self, e, entity):
+        scene = scene_manager.current_scene()
 
-        for key, value in desc["mobs"].items():
-            for i in range(value):
-                self.emit("cmd_mob_create", None, cls_name=key)
-
-    def _add_object(self, entity):
-        scene = scene_manager.current_scene
-
-        scene.add_child(Node(entity))
+        scene.add_object(Node(entity))
 
 # scene_factory.py

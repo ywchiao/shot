@@ -23,7 +23,7 @@ class Wave(Mob):
     def _update(self, entity):
         degree = facing.get_value(self._entity).degree
 
-        if degree > (self._degree + 240) % 360:
+        if degree > (self._degree + 210) % 360:
             self._turn = -1
         elif degree < (self._degree + 120) % 360:
             self._turn = 1

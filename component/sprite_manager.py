@@ -1,12 +1,13 @@
 
 import pygame
 
-class SpriteSheet:
-    def __init__(self, fname):
-        # 取得 sprite sheet
-        sprites = pygame.image.load(f"./resources/png/{fname}")
-
+class SpriteManager:
+    def __init__(self):
         self._sprites = []
+
+    def load_sprite(self, fname):
+        # 取得 sprite sheet
+        sprites = pygame.image.load(f"{fname}").convert_alpha()
 
         for i in range(3):
             self._sprites.append(
@@ -20,4 +21,4 @@ class SpriteSheet:
     def get_sprite(self, i):
         return self._sprites[i]
 
-# sprite_sheet.py
+# sprite_manager.py

@@ -2,7 +2,6 @@
 from component import facing
 from component import position
 from component import sprite_drawing
-from component import window_manager
 
 from .system import System
 
@@ -31,8 +30,8 @@ class Mob(System):
         self._visible = visible
 
     @LogCat.log_func
-    def _render(self, entity, window):
-        win = window_manager.get_window(window)
+    def _render(self, e, screen):
+        entity = e.target
 
         if self._visible:
             sprite = sprite_drawing.get_value(entity).next
@@ -41,20 +40,15 @@ class Mob(System):
                 rect = sprite.get_rect()
                 rect.center = position.get_value(entity).value
 
-                win.render(sprite, rect)
+                screen.render(sprite, rect)
 
     @LogCat.log_func
-    def _respawned(self, entity):
-        if entity == self._entity:
-            self._x, self._y = position.get_value(entity).value
-            self._degree = facing.get_value(entity).degree
-#            print(f"self.: {self}")
-#            print(f"self._degree: {entity}:{self._degree}")
-        else:
-            print(f"got yu here. entity:{entity}:self_:{self._entity}")
+    def _respawned(self, e):
+        self._x, self._y = position.get_value(self._entity).value
+        self._degree = facing.get_value(self._entity).degree
 
     @LogCat.log_func
-    def _update(self, entity):
+    def _update(self, e):
         self.emit("cmd_forward", self._entity)
 
 # mob.py

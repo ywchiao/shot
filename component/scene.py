@@ -2,7 +2,9 @@
 from util import Node
 
 class Scene:
-    def __init__(self):
+    def __init__(self, title):
+        self._title = title
+
         self._root = Node()
 
     def add_object(self, obj):
@@ -13,7 +15,7 @@ class Scene:
         return self._root
 
     @property
-    def get_mobs(self):
-        return self._root.children
+    def title(self):
+        return self._title
 
 # scene.py

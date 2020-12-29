@@ -7,7 +7,7 @@ import logging.config
 
 from logcat import LogCat
 
-class Config:
+class Configuration:
     def __init__(self):
         config_path = Path(f"./shot.json")
 
@@ -21,9 +21,22 @@ class Config:
                     "width": 1280,
                     "height": 1024,
                 },
-                "path": {
-                    "mobs": "./data/mobs",
-                    "scenes": "./data/scenes",
+                "font": {
+                    "family": "bradleyhanditc",
+                    "size": 36,
+                },
+                "mobs": {
+                    "path": "./data/mobs",
+                },
+                "scenes": {
+                    "path": "./data/scenes",
+                    "open": "sample",
+                },
+                "sprites": {
+                    "path": "./resources/png",
+                    "sheet": [
+                        "sprites",
+                    ]
                 },
                 "log": {
                     "config": "./log/config.json",
@@ -63,10 +76,22 @@ class Config:
 
     @property
     def scenes(self):
-        return self._cache["path"]["scenes"]
+        return self._cache["scenes"]["path"]
 
     @property
     def mobs(self):
-        return self._cache["path"]["mobs"]
+        return self._cache["mobs"]["path"]
 
-# config.py
+    @property
+    def sprites(self):
+        return self._cache["sprites"]
+
+    @property
+    def open_scene(self):
+        return self._cache["scenes"]["open"]
+
+    @property
+    def font(self):
+        return self._cache["font"]
+
+# configuration.py
